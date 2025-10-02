@@ -1,0 +1,59 @@
+Conversation 2 — Designing the get_weather_data Function
+
+Header: Conversation about designing the get_weather_data function for WeatherWise.
+Goal: Define inputs, outputs, and pseudocode before writing the implementation.
+Intentional prompting techniques used: Identify input/output requirements, request pseudocode, ask for code explanations, modular design.
+
+Me: I need to design the core function get_weather_data(location, forecast_days=5). Can you help me define the right inputs and outputs?
+
+AI:
+Inputs:
+- location (str): city or location name
+- forecast_days (int): number of days to forecast (1–5)
+
+Outputs:
+- A Python dict containing both current weather and forecast data, structured like this:
+{
+  "location": "Sydney",
+  "timestamp": "2025-10-02 10:00",
+  "current": {
+      "temperature": 22,
+      "humidity": 60,
+      "condition": "Partly cloudy"
+  },
+  "forecast": [
+      {"date": "2025-10-03", "min_temp": 18, "max_temp": 25, "condition": "Sunny"},
+      {"date": "2025-10-04", "min_temp": 19, "max_temp": 26, "condition": "Rain"}
+  ]
+}
+
+Me: Great. Before you write real code, please give me pseudocode so I can visualise the steps.
+
+AI (Pseudocode):
+1. Define function get_weather_data(location, forecast_days)
+2. Validate forecast_days (must be between 1 and 5)
+3. Build API request URL for wttr.in → https://wttr.in/{location}?format=j1
+4. Send request and get JSON response
+5. Parse "current_condition" → extract temperature, humidity, condition, etc.
+6. Parse "weather" list for given number of days
+   - For each day, extract min temp, max temp, condition
+7. Construct and return dictionary in unified schema
+
+Me: Why is step 2 (validating forecast_days) important?
+
+AI: Because the assignment spec says forecasts must be limited to 1–5 days. Validation ensures users can’t request invalid ranges (e.g., 0 or 10), which avoids errors or unexpected data.
+
+Me: Can you explain how step 6 works more clearly?
+
+AI: The wttr.in response contains a "weather" array with multiple days of forecast. Each entry includes "date", "maxtempC", "mintempC", and "hourly" conditions. You’ll loop through the first N days, extract min/max, and take a summary condition (e.g., most common or first hourly).
+
+Me: That makes sense. Please summarise this design decision.
+
+AI: The get_weather_data function will:
+- Take a location and forecast_days (1–5)
+- Retrieve data from wttr.in
+- Normalise the JSON into a consistent Python dict
+- Provide both current weather and daily forecasts
+This approach keeps the function modular and ensures downstream code (visualisation, NLP) can use the same schema.
+
+Me: Perfect. I’ll move on to implementing this design in code.

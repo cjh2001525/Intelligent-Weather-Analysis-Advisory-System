@@ -1,0 +1,52 @@
+Conversation 3 — Creating Visualisations
+
+Header: Conversation about designing visualisation functions for WeatherWise.
+Goal: Decide how to implement create_temperature_visualisation and create_precipitation_visualisation.
+Intentional prompting techniques used: Request modular design, ask for code explanations, query trade-offs.
+
+Me: I need to implement two visualisation functions: one for temperature trends and another for precipitation chances. Can you suggest a good design?
+
+AI:
+Yes. Create two functions with the same style of input and output:
+- create_temperature_visualisation(weather_data, output_type='display')
+- create_precipitation_visualisation(weather_data, output_type='display')
+
+Both should take the normalised weather_data dict, extract forecast values, and produce matplotlib charts.
+
+Me: Can you give pseudocode for create_temperature_visualisation?
+
+AI (Pseudocode):
+1. Extract forecast array from weather_data
+2. For each day, collect "date", "min_temp", "max_temp"
+3. Plot with matplotlib: x-axis = date, y-axis = temperature
+   - Use a line chart with two lines (min, max)
+4. Add labels, title, grid, legend
+5. If output_type == 'display': plt.show()
+   If output_type == 'save': save chart to file (PNG)
+
+Me: Why line chart instead of bar chart for temperatures?
+
+AI: A line chart makes it easier to see trends across days (continuous change), while a bar chart is discrete. For min/max temperature, two lines clearly show variation and range.
+
+Me: Now explain the precipitation chart design.
+
+AI (Pseudocode):
+1. Extract forecast array from weather_data
+2. For each day, collect "date", "precipitation_chance"
+3. Plot with matplotlib: x-axis = date, y-axis = precipitation chance (%)
+4. Use a bar chart (each bar = one day)
+5. Add labels, title, y-axis range 0–100
+6. Show or save depending on output_type
+
+Me: Why bar chart here?
+
+AI: Because precipitation chances are discrete daily values, not continuous trends. A bar chart makes the differences clearer.
+
+Me: Can you summarise the trade-offs between line and bar charts?
+
+AI:
+- Line chart: best for continuous values over time (temperature trends)
+- Bar chart: best for categorical or discrete values (precipitation chance by day)
+Choosing different chart types for temperature vs precipitation also makes the UI more varied and easier to interpret.
+
+Me: Perfect. I’ll implement these two functions with matplotlib using your design.

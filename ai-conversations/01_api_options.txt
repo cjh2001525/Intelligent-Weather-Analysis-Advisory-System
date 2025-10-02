@@ -1,0 +1,72 @@
+---------------------------------- 
+Tool: ChatGPT Date: 2025-09-28 
+----------------------------------
+Conversation 1 — Exploring Weather Data API Options (decision & trade-offs)
+
+Header: Conversation about choosing a weather data source for the WeatherWise project.
+Goal: Compare fetch-my-weather, wttr.in (direct API), and OpenWeatherMap (OWM), then decide which to implement first.
+Intentional prompting techniques used: Restate problem, identify I/O requirements, query design trade-offs, challenge edge cases, request decision.
+
+Me: I need a reliable weather data source for my WeatherWise assignment. The rubric mentions three options: a helper package (fetch-my-weather), calling wttr.in directly, or integrating a commercial API like OpenWeatherMap. I want something I can implement quickly, but I also care about code quality and the possibility of bonus points. Can you compare these options for me?
+
+AI:
+- fetch-my-weather (Foundation option): Easiest to start with because it wraps wttr.in and normalises responses. Minimal code and less chance of HTTP/JSON errors. Lowest flexibility and fewer opportunities to demonstrate custom request/processing skills.
+- wttr.in direct (Standard option): You call a simple endpoint (e.g., https://wttr.in/{city}?format=j1) and parse JSON yourself. Good balance between effort and control. You can design your own schema, handle errors, and show modularity. No API key needed.
+- OpenWeatherMap (Extension option): Requires an API key and more request logic (endpoints, units, rate limits). Most flexible, richer data (alerts, hourly, icons). Best for demonstrating robust engineering, which can support bonus marks—if implemented cleanly (error handling, caching, unit conversion).
+
+Me: My priorities: (1) differentiate from a friend who used fetch-my-weather; (2) keep scope manageable; (3) still leave room for extension later. Which option aligns best?
+
+AI: Start with wttr.in direct for core features. It differentiates you from the helper package, avoids API-key admin, and still lets you demonstrate modular design, error handling, and custom data shaping. You can add an optional OWM extension later for bonus.
+
+Me: What input/output requirements should I plan for if I choose wttr.in?
+
+AI:
+Inputs: location: str (city or location), forecast_days: int (1–5); optional units="metric" (wttr.in defaults to metric-esque values; you can normalise).
+Outputs: A dict you define, e.g.:
+{
+  "location": "Perth",
+  "timestamp": "YYYY-MM-DD HH:MM",
+  "units": "metric",
+  "current": {
+      "temperature": float,
+      "condition": str,
+      "humidity": int,
+      "wind_speed": float,
+      "wind_direction": str,
+      "precipitation": float
+  },
+  "forecast": [
+      {"date": "YYYY-MM-DD", "min_temp": float, "max_temp": float,
+       "condition": str, "precipitation_chance": int},
+      ...
+  ]
+}
+Design it once and reuse it for OWM so your visualisation/NLP code doesn’t change later.
+
+Me: What edge cases should I handle to satisfy the rubric’s “error handling” requirement?
+
+AI:
+- Invalid or empty location → validate and show a friendly message.
+- Network/HTTP errors → timeout, non-200 status, malformed JSON.
+- Missing fields in response → default values or skip gracefully.
+- Forecast length outside 1–5 → clamp or raise a clear error.
+- Unit consistency → document metric assumptions; convert if needed.
+- Rate limiting → simple retry/backoff or message to try again later.
+
+Me: If I later add OWM for extra credit, what integration strategy keeps changes minimal?
+
+AI: Create a data adapter layer: get_weather_data() calls either fetch_wttr(location, days) or fetch_owm(location, days), then both pass through a normaliser function that maps raw API JSON into your unified schema. Your charts and NLP consume only the unified schema.
+
+Me: Are there security or privacy concerns I should mention in the reflection?
+
+AI:
+- Avoid hard-coding API keys (if you use OWM later); read from environment variables.
+- Don’t log secrets.
+- Be transparent about data source and limits.
+- Discuss trade-offs you made (simplicity vs. richness) and how intentional prompting shaped your decision.
+
+Me: Great. Please summarise the decision so I can reference it in my README and reflection.
+
+AI: Decision: Use wttr.in direct for the core submission, implementing your own request handling, validation, unified data schema, and two visualisations (temperature trend + precipitation chance). Document how you could extend to OpenWeatherMap via a pluggable adapter for bonus credit. This path balances speed, originality (different from your friend’s approach), and rubric coverage.
+
+Me: Approved. I’ll proceed with wttr.in now and plan an optional OWM adapter later. Next, I’ll design get_weather_data(location, forecast_days) and its normalised schema.

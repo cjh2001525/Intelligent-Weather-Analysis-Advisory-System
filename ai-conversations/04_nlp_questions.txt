@@ -1,0 +1,49 @@
+Conversation 4 — Handling Natural Language Questions
+
+Header: Conversation about designing NLP functions for WeatherWise.
+Goal: Implement parse_weather_question and generate_weather_response to handle simple user questions.
+Intentional prompting techniques used: Challenge edge cases, request iterative improvements, ask for modular design.
+
+Me: I need to implement a simple natural language interface for my weather app. The functions are parse_weather_question(question) and generate_weather_response(parsed_question, weather_data). How can I do this without using an advanced AI API?
+
+AI:
+Use a keyword-based approach. parse_weather_question should:
+- Lowercase the question
+- Search for keywords like "rain", "temperature", "hot", "cold", "wind", "humid"
+- Look for time expressions like "today", "tomorrow", "Friday"
+- Return a dict with "topic" (rain/temp/wind/etc.) and "day" (0=today, 1=tomorrow, etc.)
+
+Then generate_weather_response should:
+- Take the parsed dict and look up the right values in weather_data
+- Return a simple string answer (e.g., "Yes, rain is expected tomorrow in Perth.").
+
+Me: What if a user asks: "Is it going to be windy on Friday?"
+
+AI: In parse_weather_question:
+- Detect keyword "windy" → topic = "wind"
+- Detect "Friday" → map to index if available in forecast
+In generate_weather_response:
+- Look up forecast for that date, get wind_speed
+- Construct answer: "Yes, winds of 25 km/h are expected on Friday."
+
+Me: How about edge cases like vague questions ("What's the weather?")?
+
+AI: If no clear keyword is found, set topic="general". Then generate_weather_response can provide a fallback: "Currently it's 22°C and partly cloudy in Perth." This ensures the program always returns something.
+
+Me: Can you refine the design to be modular?
+
+AI:
+- parse_weather_question → returns a structured dict, e.g. {"topic": "rain", "day": 1}
+- generate_weather_response → consumes that dict and weather_data, returns answer string
+This separation keeps parsing logic separate from data lookup.
+
+Me: Perfect. Can you summarise the iterative improvements?
+
+AI:
+1. Start with simple keyword matching
+2. Add day parsing for "today/tomorrow"
+3. Add weekday name parsing ("Friday")
+4. Add fallback general response
+This progression makes the NLP robust enough for the rubric without depending on an external AI model.
+
+Me: Great, I’ll implement it step by step.

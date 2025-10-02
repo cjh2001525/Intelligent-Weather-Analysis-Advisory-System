@@ -1,0 +1,66 @@
+----------------------------------
+Tool: ChatGPT
+Date: 2025-10-02
+----------------------------------
+
+Me: I already covered the required features. Do I also need to add more tests to make the project stronger?
+
+AI: Your current tests already cover the rubric’s core requirements: 
+- Current weather data
+- Forecast
+- Two different visualisations
+- NLP Q&A
+
+These are sufficient for the main grade.  
+
+However, if you want to demonstrate robustness and possibly gain higher marks, you could add extra tests such as:  
+1. Invalid input (e.g., misspelled or empty location).  
+2. Boundary values (forecast days <1 or >5).  
+3. Multi-city comparisons (Perth vs Sydney).  
+4. NLP robustness with weekday names and unusual input.
+
+Me: Can you give me some example code to test those scenarios?
+
+AI: Sure. Here are three test cells you can add:
+
+--- Edge Cases & Invalid Inputs ---
+```python
+def try_fetch(loc, days):
+    print(f"\n-- get_weather_data('{loc}', {days}) --")
+    data = get_weather_data(loc, days)
+    if not isinstance(data, dict) or data.get("ok") is False:
+        print("Result: ERROR ->", data.get("error", "Unknown error"))
+    else:
+        print(f"Result: OK | location={data.get('location')} | days={len(data.get('forecast', []))}")
+
+try_fetch("Perth", 0)    # clamp to 1
+try_fetch("Perth", 10)   # clamp to 5
+try_fetch("", 3)         # invalid
+try_fetch("ThisIsNotACity", 3) # likely error
+```
+
+--- Multi-city Comparison ---
+```python
+cities = ["Perth", "Sydney"]
+for city in cities:
+    d = get_weather_data(city, 5)
+    if d.get("ok"):
+        print(f"{city} max temps:", [day["max_temp"] for day in d["forecast"]])
+```
+
+--- NLP Weekday Parsing ---
+```python
+d = get_weather_data("Perth", 5)
+questions = ["Weather on Monday?", "Will it rain on Thursday?", "Is it hot tomorrow?", " ", 123]
+for q in questions:
+    parsed = parse_weather_question(str(q))
+    ans = generate_weather_response(parsed, d)
+    print(f"\nQ: {q}\nParsed: {parsed}\nA: {ans}")
+```
+
+Me: That looks useful. Should I put these inside the AI-conversations folder?
+
+AI: No, the test code should stay in your notebook under **Testing & Examples**.  
+For the `ai-conversations/` folder, you should save this discussion itself (how you asked the AI to help design tests). That way, it clearly shows intentional prompting and collaboration with AI tools.
+
+Me: Got it. I’ll save this as conversation6.txt.
