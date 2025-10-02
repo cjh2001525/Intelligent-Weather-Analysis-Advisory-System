@@ -1,0 +1,89 @@
+WeatherWise 🌤️
+Project Overview
+
+WeatherWise is a Python-based weather application built in Google Colab.
+The project was designed as part of a learning exercise to practice modular programming, data visualisation, natural language processing, and user interface design.
+
+With WeatherWise, users can:
+
+🌡️ Check current weather (temperature, humidity, wind, precipitation, condition).
+
+📅 View a 5-day forecast (min/max temperature, conditions, chance of rain).
+
+📊 Visualise trends using two different charts:
+
+Line chart of daily min/max temperatures.
+
+Bar chart of daily precipitation chances.
+
+💬 Ask natural language questions, e.g. “Will it rain tomorrow?” or “How humid is it today?”.
+
+🖥️ Navigate via a menu system (powered by pyinputplus if available, with a fallback to simple input).
+
+Features
+
+Weather Data Retrieval from the free wttr.in
+ API.
+
+Structured Output: separates current and forecast weather data.
+
+Error Handling for invalid inputs or API failures.
+
+Data Visualisations: temperature line chart and precipitation bar chart.
+
+NLP Parsing: extracts topics (temperature, rain, wind, humidity) and days (today, tomorrow, weekdays).
+
+User Interface: clean console menu, supports multiple interactions.
+
+Setup Instructions
+Prerequisites
+
+A Google account (to use Google Colab).
+
+Web browser with internet access.
+
+Step 1: Open in Google Colab
+
+Download or clone the repository.
+
+Open Google Colab
+.
+
+Upload WeatherWise_MyProject.ipynb.
+
+Step 2: Install Required Libraries
+
+The first cell in the notebook handles dependencies.
+If needed, run manually:
+
+!pip install pyinputplus
+
+Step 3: Run the Notebook
+
+Run cells in order (Setup → Functions → Main → Testing).
+
+When prompted, enter a city (e.g., Perth).
+
+Use the menu to explore current weather, forecast, visualisations, or natural language queries.
+
+Troubleshooting
+
+Invalid City: If input is invalid, the app will show an error and re-prompt.
+
+Network Issues: Ensure Colab has internet access.
+
+Missing pyinputplus: Install with !pip install pyinputplus.
+
+Repository Structure
+.
+├── WeatherWise_MyProject.ipynb   # Main Colab notebook
+├── ai-conversations/             # At least 5 AI conversation logs (.txt)
+├── submission/
+│   ├── reflection-template.md    # Reflection document (300–500 words)
+│   └── PROMPTING.md              # Prompting strategies & examples
+└── README.md                     # Project overview & setup
+
+
+ChatGPT was used as an AI assistant to help generate, refine, and debug code, as well as to design testing strategies.
+
+Weather data provided by the free wttr.in API.
